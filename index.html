@@ -1,9 +1,440 @@
-<!doctype html>
-<html>
-  <body>
-    <h1>Hi</h1>
-    <p>Welcome to Fast4word's site!</p>
-    <p>Fast4word is a Dunah Company, that publishes web software. <a href="CrownAI">Check out our chatbot!</a></p>
-  </body>
-  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dunah PlayZone - Free Online Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #ffd700;
+            color: #333;
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-color: #ffd700;
+        }
+
+        .game-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #333;
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+        }
+
+        .game-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .game-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .genre-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: #ffd700;
+        }
+
+        .play-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: #ff0000;
+            transform: rotate(90deg);
+        }
+
+        .game-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .modal-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-frame {
+                height: 400px;
+            }
+
+            .modal-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">🎮 Dunah PlayZone</div>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search games...">
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All Games</button>
+                <button class="filter-btn" data-filter="action">Action</button>
+                <button class="filter-btn" data-filter="strategy">Strategy</button>
+                <button class="filter-btn" data-filter="puzzle">Puzzle</button>
+                <button class="filter-btn" data-filter="arcade">Arcade</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="section-title">Featured Games</h1>
+        <div class="games-grid" id="gamesGrid"></div>
+        <div class="no-results" id="noResults" style="display: none;">
+            No games found. Try a different search!
+        </div>
+    </div>
+
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-description" id="modalDescription"></p>
+            <iframe class="game-frame" id="gameFrame" allow="fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const gamesData = {
+            "segments": [
+                {
+                    "title": "Specially for you",
+                    "hits": [
+                        {"id": "115821", "slug": "snake--arena", "title": "Snake Arena", "description": "Snake Arena is a multiplayer game where you navigate vibrant arenas, outsmart rivals, and gather power-ups. Perfect your strategy to enhance your snake's growth with each collected point.", "gameURL": "https://playgama.com/export/game/snake--arena?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/dd11f38b-9011-4cd9-db08-d78101541900/enlarged"], "genres": ["io", "action", "arcade", "skill", "snake"]},
+                        {"id": "113217", "slug": "snake-to-eat", "title": "Snake to Eat", "description": "Guide your snake through simple yet tricky puzzles as you eat apples to grow longer. Your goal is to make the snake long enough to reach the teleportation portal.", "gameURL": "https://playgama.com/export/game/snake-to-eat?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/4df7b2b4-4e33-4345-9c2f-a337fa78dd00/enlarged"], "genres": ["puzzle", "arcade", "skill", "snake", "brain"]},
+                        {"id": "114919", "slug": "snake-2077-glitch-war", "title": "Snake 2077: Glitch War", "description": "Dive into a chaotic, neon-lit digital arena where the only rule is survival. Collect energy pellets to grow your cyber-snake and dominate the leaderboard!", "gameURL": "https://playgama.com/export/game/snake-2077-glitch-war?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/9264da96-18cc-43c1-f439-3b71139a7c00/enlarged"], "genres": ["io", "arcade", "snake", "pvp", "retro"]},
+                        {"id": "21", "slug": "idle-train-empire", "title": "Idle Train Empire Tycoon", "description": "Create and oversee your railway station. Upgrade trains, design routes, and accommodate more guests to expand your empire.", "gameURL": "https://playgama.com/export/game/idle-train-empire?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/f2688391-95cd-4885-c18c-9acd1ce13900/enlarged"], "genres": ["simulation", "tycoon", "management", "train", "idle"]},
+                        {"id": "99706", "slug": "kingdom-defender-tower-defense", "title": "Kingdom Defender - Tower Defense", "description": "Defend your kingdom from hordes of orcs, trolls, evil undead using towers and special abilities! Epic defensive battles await!", "gameURL": "https://playgama.com/export/game/kingdom-defender-tower-defense?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/4ced3d7c-ca04-46a7-2ed1-f18fe43b3c00/enlarged"], "genres": ["strategy", "pve", "tower-defense"]},
+                        {"id": "112273", "slug": "tower-defense", "title": "Tower Defense", "description": "Build towers and survive all waves of horrible monsters attacking your kingdom. Use elements to your advantage!", "gameURL": "https://playgama.com/export/game/tower-defense?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/4fae1d12-26a0-48bc-ef48-dd1864034e00/enlarged"], "genres": ["strategy", "mouse", "popular", "pve", "tower-defense"]},
+                        {"id": "90498", "slug": "tb-world", "title": "TB World", "description": "Bring your fantasies to life, creating stylish images for characters and cozy interiors. Transform and design your unique world!", "gameURL": "https://playgama.com/export/game/tb-world?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/ace48d2d-25e1-4050-7eb7-974ef94ed200/enlarged"], "genres": ["girls", "kids", "make-up", "dress-up", "decoration", "cozy"]},
+                        {"id": "111127", "slug": "pocket-universe", "title": "Pocket Universe", "description": "Build and expand your own tiny world. Gather resources, discover diverse biomes, and watch your little world grow into a whole universe!", "gameURL": "https://playgama.com/export/game/pocket-universe?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/97329b6f-5957-406f-08dc-0fdba728c000/enlarged"], "genres": ["adventure", "simulation", "pve", "cozy", "space"]},
+                        {"id": "44", "slug": "deadly-descent", "title": "Deadly Descent", "description": "Race down perilous mountain routes encountering various hazards. Thrilling car destruction and lifelike driving await!", "gameURL": "https://playgama.com/export/game/deadly-descent?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/79d71efd-42d5-48c6-4e91-532faf999f00/enlarged"], "genres": ["racing", "arcade", "car", "driving"]},
+                        {"id": "92176", "slug": "gangster-island-crime-city", "title": "Gangsta Island: Crime City", "description": "Start as a street dweller and climb your way to world domination in this action-packed crime adventure!", "gameURL": "https://playgama.com/export/game/gangster-island-crime-city?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/a0ffbb28-8c32-4b43-ecd3-59e4ba73c600/enlarged"], "genres": ["arcade", "adventure"]},
+                        {"id": "99664", "slug": "rooftop-run", "title": "Rooftop Run", "description": "Run, jump, and slide over rooftops in this fast-paced parkour game! Master your skills across exciting levels.", "gameURL": "https://playgama.com/export/game/rooftop-run?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/f6a172bd-52d7-46a2-9180-7f2ea1853300/enlarged"], "genres": ["action", "skill", "running", "platform", "parkour"]},
+                        {"id": "114356", "slug": "parkour-runner-3d", "title": "Parkour Runner 3D", "description": "Sprint, jump, slide, and flip through thrilling obstacle courses! Master parkour tricks across dynamic environments.", "gameURL": "https://playgama.com/export/game/parkour-runner-3d?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/bbdc105f-03b9-4c97-c268-f0041d75da00/enlarged"], "genres": ["action", "arcade", "adventure", "3d", "running", "parkour"]},
+                        {"id": "111321", "slug": "escape-from-school-3d", "title": "Escape from School 3D", "description": "Fight your way through evil teachers and bullies to escape this crazy school! Use weapons and strategy to break free!", "gameURL": "https://playgama.com/export/game/escape-from-school-3d?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/538096d7-f989-403e-a583-d5bdc2301300/enlarged"], "genres": ["action", "adventure", "strategy", "kids", "3d", "escape"]},
+                        {"id": "99617", "slug": "aod--art-of-defense", "title": "AOD - Art Of Defense", "description": "Dynamic tower defense with RPG elements in a post-apocalyptic world. Build tech kingdoms and save humanity!", "gameURL": "https://playgama.com/export/game/aod--art-of-defense?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/2456648c-9bdc-4c36-1312-205e0cba1100/enlarged"], "genres": ["strategy", "popular", "tower-defense"]},
+                        {"id": "106324", "slug": "age-of-tanks-warriors-td-war", "title": "Age of Tanks Warriors: TD War", "description": "Lead your tank army through the ages! Upgrade battle tanks and use tower defense strategy to conquer every era.", "gameURL": "https://playgama.com/export/game/age-of-tanks-warriors-td-war?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/135c7e32-e800-4a05-9ea1-e40cae1ec400/enlarged"], "genres": ["strategy", "tower-defense", "tanks"]},
+                        {"id": "99346", "slug": "idle-cinema-tycoon", "title": "Idle Cinema Tycoon", "description": "Manage your movie theater empire! Schedule screenings, upgrade interiors, and maximize profits from ticket sales.", "gameURL": "https://playgama.com/export/game/idle-cinema-tycoon?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/b4fd83a8-3cca-41df-b31c-4cb8e6188100/enlarged"], "genres": ["simulation", "tycoon", "management", "idle"]},
+                        {"id": "95756", "slug": "idle-crafting-empire-tycoon-3a99-1", "title": "Idle Crafting Empire Tycoon", "description": "Build your crafting empire! Explore islands, discover resources, and craft valuable goods in this engaging simulator.", "gameURL": "https://playgama.com/export/game/idle-crafting-empire-tycoon-3a99-1?clid=p_849b23d2-b7ae-4a5d-837f-db1d16c4673d", "images": ["https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/98192461-de79-457b-a6ac-b66c2cfe5000/enlarged"], "genres": ["simulation", "tycoon", "management", "crafting", "idle"]}
+                    ]
+                }
+            ]
+        };
+
+        let allGames = gamesData.segments[0].hits;
+        let filteredGames = [...allGames];
+
+        function renderGames(games) {
+            const grid = document.getElementById('gamesGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (games.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            grid.innerHTML = games.map(game => `
+                <div class="game-card" onclick="openGame('${game.id}')">
+                    <img src="${game.images[0]}" alt="${game.title}" class="game-image" onerror="this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(game.title)}'">
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <p class="game-description">${game.description}</p>
+                        <div class="game-genres">
+                            ${game.genres.slice(0, 3).map(genre => `<span class="genre-tag">${genre}</span>`).join('')}
+                        </div>
+                        <button class="play-btn">▶ Play Now</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openGame(gameId) {
+            const game = allGames.find(g => g.id === gameId);
+            if (!game) return;
+
+            document.getElementById('modalTitle').textContent = game.title;
+            document.getElementById('modalDescription').textContent = game.description;
+            document.getElementById('gameFrame').src = game.gameURL;
+            document.getElementById('gameModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('gameModal').classList.remove('active');
+            document.getElementById('gameFrame').src = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filteredGames = allGames.filter(game => 
+                game.title.toLowerCase().includes(searchTerm) ||
+                game.description.toLowerCase().includes(searchTerm) ||
+                game.genres.some(genre => genre.toLowerCase().includes(searchTerm))
+            );
+            renderGames(filteredGames);
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                const filter = e.target.dataset.filter;
+                if (filter === 'all') {
+                    filteredGames = [...allGames];
+                } else {
+                    filteredGames = allGames.filter(game => 
+                        game.genres.includes(filter)
+                    );
+                }
+                renderGames(filteredGames);
+            });
+        });
+
+        document.getElementById('gameModal').addEventListener('click', (e) => {
+            if (e.target.id === 'gameModal') {
+                closeModal();
+            }
+        });
+
+        renderGames(allGames);
+    </script>
+</body>
 </html>
